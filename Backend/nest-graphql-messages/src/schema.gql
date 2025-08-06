@@ -1,0 +1,17 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Message {
+  id: ID!
+  userId: String!
+  text: String!
+}
+
+type Query {
+  getMessagesByUserId(userId: String!): [Message!]!
+}
+
+type Mutation {
+  sendMessage(userId: String!, text: String!): Message!
+}
