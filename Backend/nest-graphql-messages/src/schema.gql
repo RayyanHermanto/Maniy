@@ -2,9 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Message {
+type Wallet {
   id: ID!
-  userId: String!
+  name: String!
+  type: String!
+  balance: Float!
+  description: String
+  currency: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  wallets: [Wallet!]
+  transactions: [Transaction!]
+}
+
+type Transaction {
+  id: ID!
+  user: User!
   date: DateTime!
   from: String!
   to: String!
@@ -18,9 +36,18 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Query {
-  getMessagesByUserId(userId: String!): [Message!]!
+  getTransactionsByUserId(userId: String!): [Transaction!]!
+  getAllWallets: [Wallet!]!
+  getWalletById(id: String!): Wallet
+  users: [User!]!
+  user(id: String!): User!
 }
 
 type Mutation {
-  sendMessage(userId: String!, from: String!, to: String!, amount: Float!, note: String!, date: DateTime): Message!
+  sendTransaction(userId: String!, from: String!, to: String!, amount: Float!, note: String!, date: DateTime): Transaction!
+  createWallet(userId: String!, name: String!, type: String!, currency: String!, description: String): Wallet!
+  increaseWalletBalance(id: String!, amount: Float!): Wallet!
+  decreaseWalletBalance(id: String!, amount: Float!): Wallet!
+  createUser(name: String!, email: String!): User!
+  deleteUser(id: String!): Boolean!
 }

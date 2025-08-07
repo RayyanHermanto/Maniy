@@ -1,14 +1,19 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from '../user/user.entity'; // pastikan path ini sesuai struktur proyekmu
 
 @ObjectType()
 @Entity()
-export class Message {
+export class Transaction {
   @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Field()
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' }) // menetapkan kolom foreign key
+  user: User;
+
   @Column()
   userId: string;
 

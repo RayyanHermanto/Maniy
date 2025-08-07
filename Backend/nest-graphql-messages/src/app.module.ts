@@ -3,8 +3,14 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MessagesModule } from './messages/messages.module';
-import { Message } from './messages/message.entity'; // 👈 entitas nanti dibuat
+
+import { TransactionModule } from './transaction/transaction.module';
+import { WalletModule } from './wallet/wallet.module';
+import { UserModule } from './user/user.module';
+
+import { Transaction } from './transaction/transaction.entity';
+import { Wallet } from './wallet/wallet.entity';
+import { User } from './user/user.entity';
 
 @Module({
   imports: [
@@ -19,10 +25,12 @@ import { Message } from './messages/message.entity'; // 👈 entitas nanti dibua
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || 'test_db',
-      entities: [Message],
+      entities: [Transaction, Wallet, User],
       synchronize: true,
     }),
-    MessagesModule,
+    TransactionModule,
+    WalletModule,
+    UserModule, // ✅ tambahkan ini
   ],
 })
 export class AppModule {}
