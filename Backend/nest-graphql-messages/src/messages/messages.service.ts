@@ -1,22 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from './message.model';
-import { v4 as uuidv4 } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Message } from './message.entity';
 
 @Injectable()
 export class MessagesService {
-  private messages: Message[] = [];
+  constructor(
+    @InjectRepository(Message)
+    private readonly messageRepo: Repository<Message>,
+  ) {}
 
-  sendMessage(userId: string, text: string): Message {
-    const message: Message = {
-      id: uuidv4(),
+  async sendMessage(
+    userId: string,
+    from: string,
+    to: string,
+    amount: number,
+    note: string,
+    date?: Date,
+  ): Promise<Message> {
+    const message = this.messageRepo.create({
       userId,
-      text,
-    };
-    this.messages.push(message);
-    return message;
+      from,
+      to,
+      amount,
+      note,
+      date: date ?? new Date(), // isi tanggal sekarang jika tidak dikirim
+    });
+    return this.messageRepo.save(message);
   }
 
-  getMessagesByUserId(userId: string): Message[] {
-    return this.messages.filter((msg) => msg.userId === userId);
+  async getMessagesByUserId(userId: string): Promise<Message[]> {
+    return this.messageRepo.find({ where: { userId } });
   }
 }

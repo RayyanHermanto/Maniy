@@ -5,13 +5,22 @@
 type Message {
   id: ID!
   userId: String!
-  text: String!
+  date: DateTime!
+  from: String!
+  to: String!
+  amount: Float!
+  note: String!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Query {
   getMessagesByUserId(userId: String!): [Message!]!
 }
 
 type Mutation {
-  sendMessage(userId: String!, text: String!): Message!
+  sendMessage(userId: String!, from: String!, to: String!, amount: Float!, note: String!, date: DateTime): Message!
 }
