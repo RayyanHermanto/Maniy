@@ -12,7 +12,7 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  user(@Args('id') id: string): Promise<User> {
+  user(@Args('id') id: string): Promise<User | null> {
     return this.userService.findOne(id);
   }
 
