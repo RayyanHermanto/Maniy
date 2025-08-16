@@ -143,18 +143,6 @@ npm run test
 
 ---
 
-## 🤝 Kontribusi
-
-Kontribusi sangat terbuka!  
-Langkah-langkah:
-
-1. Fork repo ini
-2. Buat branch baru (`git checkout -b feature/your-feature`)
-3. Commit perubahan (`git commit -m "Add new feature"`)
-4. Push ke branch (`git push origin feature/your-feature`)
-5. Buat Pull Request
-
----
 
 ## 📄 Lisensi
 
