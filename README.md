@@ -1,88 +1,90 @@
 # Maniy
 
-**Maniy** adalah proyek aplikasi modern berbasis microservices yang menggabungkan **React (Frontend)**, **NestJS (API Gateway dan Microservices)**, **GraphQL**, serta **Docker** untuk deployment. Proyek ini mendukung **PWA (Progressive Web App)** dan dirancang untuk scalable, modular, dan mudah di-maintain.
+**Maniy** is a **web-based financial management application** built on a modern **microservices architecture**.  
+It integrates **React (Frontend)**, **NestJS (API Gateway & Microservices)**, **GraphQL**, and **Docker** for deployment.  
+The project supports **Progressive Web App (PWA)** capabilities and is designed to be scalable, modular, and easy to maintain.  
 
 ---
 
-## 🏗️ Arsitektur
+## 🏗️ Architecture
 
-Proyek ini terdiri dari beberapa komponen utama:
+The project consists of the following major components:
 
 1. **Frontend (React)**
-   - Framework: React + GraphQL
-   - Mendukung **Progressive Web App (PWA)**:
-     - Offline mode
-     - Install ke home screen
-     - Push notification (opsional)
-   - PWA dapat diimplementasikan dengan `workbox`, `vite-plugin-pwa`, atau `create-react-app` + `serviceWorker`.
+   - Built with React + GraphQL  
+   - Supports **Progressive Web App (PWA)** features:
+     - Offline mode  
+     - Install to home screen  
+     - Push notifications (optional)  
+   - PWA can be implemented with `workbox`, `vite-plugin-pwa`, or `create-react-app` + `serviceWorker`.  
 
 2. **API Gateway**
-   - Framework: NestJS
-   - Menyediakan endpoint **GraphQL**
-   - Meneruskan request dari frontend ke microservices
+   - Framework: NestJS  
+   - Provides a **GraphQL endpoint**  
+   - Routes requests from the frontend to the microservices  
 
 3. **Microservice 1: Auth Service**
-   - Framework: NestJS
-   - Autentikasi menggunakan **JWT** untuk session
-   - Mendukung **OAuth** untuk login pihak ketiga (opsional)
-   - Menyimpan session/token di **Redis**
+   - Framework: NestJS  
+   - Authentication using **JWT** for sessions  
+   - Optional **OAuth** for third-party login  
+   - Stores sessions/tokens in **Redis**  
 
 4. **Microservice 2: Business Logic Service**
-   - Framework: Java Spring Boot (opsional atau hybrid)
-   - Terhubung ke **Oracle DB**
-   - Menangani logic bisnis inti
+   - Framework: Java Spring Boot (optional / hybrid setup)  
+   - Connected to **Oracle DB**  
+   - Handles core business logic  
 
 5. **Microservice 3: Data Service**
-   - Framework: NestJS
-   - Terhubung ke **MongoDB**
-   - Menyimpan data tidak terstruktur (log, konfigurasi dinamis, dll)
+   - Framework: NestJS  
+   - Connected to **MongoDB**  
+   - Stores unstructured data (logs, dynamic configuration, etc.)  
 
 6. **Message Queue**
-   - **RabbitMQ** untuk komunikasi asynchronous antar microservices
-   - Contoh: Auth Service mengirim event ke Business Service
+   - **RabbitMQ** for asynchronous communication between services  
+   - Example: Auth Service emits events consumed by Business Service  
 
 7. **Cache**
-   - **Redis** untuk caching:
-     - Data user
-     - Session
-     - Query GraphQL yang sering dipakai
+   - **Redis** for caching frequently used data:  
+     - User data  
+     - Sessions  
+     - Common GraphQL queries  
 
 8. **Deployment**
-   - Semua layanan dikontainerisasi dengan **Docker**
-   - CI/CD menggunakan **GitHub Actions** (build → test → deploy otomatis)
+   - All services are containerized using **Docker**  
+   - CI/CD powered by **GitHub Actions** (build → test → deploy)  
 
 9. **Testing**
-   - Framework testing: **Jest** untuk React & NestJS
+   - Testing framework: **Jest** for React & NestJS  
 
 ---
 
-## ⚙️ Persyaratan
+## ⚙️ Requirements
 
-- Node.js v16+
-- Yarn atau npm
-- Redis
-- RabbitMQ
-- MongoDB
-- Docker & Docker Compose
-- GitHub Actions (untuk CI/CD)
+- Node.js v16+  
+- Yarn or npm  
+- Redis  
+- RabbitMQ  
+- MongoDB  
+- Docker & Docker Compose  
+- GitHub Actions (for CI/CD)  
 
 ---
 
-## 🚀 Instalasi & Menjalankan
+## 🚀 Installation & Run
 
-1. Kloning repositori:
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/RayyanHermanto/Maniy.git
    cd Maniy
    ```
 
-2. Setup dependency di masing-masing service:
+2. Install dependencies for each service:
 
    ```bash
    cd frontend
    npm install
-   # atau yarn install
+   # or yarn install
 
    cd ../api-gateway
    npm install
@@ -94,21 +96,23 @@ Proyek ini terdiri dari beberapa komponen utama:
    npm install
    ```
 
-3. Jalankan menggunakan **Docker Compose**:
+3. Run using **Docker Compose**:
 
    ```bash
    docker-compose up --build
    ```
 
-4. Akses layanan:
-   - Frontend: `http://localhost:3000`
-   - API Gateway (GraphQL): `http://localhost:9000/graphql`
+4. Access the services:  
+   - Frontend: `http://localhost:3000`  
+   - API Gateway (GraphQL): `http://localhost:9000/graphql`  
 
 ---
 
-## 📡 Endpoints GraphQL
+## 📡 GraphQL Endpoints
 
-API Gateway menyajikan endpoint GraphQL untuk frontend. Contoh query:
+The API Gateway exposes GraphQL endpoints for the frontend.  
+
+Example query:
 
 ```graphql
 query {
@@ -120,7 +124,7 @@ query {
 }
 ```
 
-Contoh mutation:
+Example mutation:
 
 ```graphql
 mutation {
@@ -135,7 +139,7 @@ mutation {
 
 ## 🧪 Testing
 
-Menjalankan unit test:
+Run unit tests:
 
 ```bash
 npm run test
@@ -143,8 +147,7 @@ npm run test
 
 ---
 
-
-## 📄 Lisensi
+## 📄 License
 
 © 2025 Rayyan Hermanto  
 Licensed under the MIT License.
