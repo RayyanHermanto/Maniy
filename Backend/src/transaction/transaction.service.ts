@@ -7,7 +7,7 @@ import { Transaction } from './transaction.entity';
 export class TransactionService {
   constructor(
     @InjectRepository(Transaction)
-    private readonly TransactionRepo: Repository<Transaction>,
+    private readonly transactionRepo: Repository<Transaction>,
   ) {}
 
   async sendTransaction(
@@ -18,18 +18,21 @@ export class TransactionService {
     note: string,
     date?: Date,
   ): Promise<Transaction> {
-    const Transaction = this.TransactionRepo.create({
+    const transaction = this.transactionRepo.create({
       userId,
       from,
       to,
       amount,
       note,
-      date: date ?? new Date(), // isi tanggal sekarang jika tidak dikirim
+      date: date ?? new Date(),
     });
-    return this.TransactionRepo.save(Transaction);
+    return this.transactionRepo.save(transaction);
   }
 
   async getTransactionsByUserId(userId: string): Promise<Transaction[]> {
-    return this.TransactionRepo.find({ where: { userId } });
+    return this.transactionRepo.find({
+      where: { userId },
+      relations: ['user'],
+    });
   }
 }

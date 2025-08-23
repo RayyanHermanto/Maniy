@@ -4,7 +4,7 @@ import { Transaction } from './transaction.entity';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
-  constructor(private readonly TransactionService: TransactionService) {}
+  constructor(private readonly transactionService: TransactionService) {}
 
   @Mutation(() => Transaction)
   async sendTransaction(
@@ -15,11 +15,11 @@ export class TransactionResolver {
     @Args('note') note: string,
     @Args('date', { nullable: true }) date?: Date,
   ): Promise<Transaction> {
-    return this.TransactionService.sendTransaction(userId, from, to, amount, note, date);
+    return this.transactionService.sendTransaction(userId, from, to, amount, note, date);
   }
 
   @Query(() => [Transaction])
   async getTransactionsByUserId(@Args('userId') userId: string): Promise<Transaction[]> {
-    return this.TransactionService.getTransactionsByUserId(userId);
+    return this.transactionService.getTransactionsByUserId(userId);
   }
 }

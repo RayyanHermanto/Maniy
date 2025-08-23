@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from '../user/user.entity'; // pastikan path ini sesuai struktur proyekmu
+import { User } from '../user/user.entity';
 
 @ObjectType()
 @Entity()
@@ -11,14 +11,14 @@ export class Transaction {
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' }) // menetapkan kolom foreign key
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @Column()
   userId: string;
 
   @Field(() => Date)
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
   @Field()
