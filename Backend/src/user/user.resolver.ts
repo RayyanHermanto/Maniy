@@ -16,13 +16,14 @@ export class UserResolver {
     return this.userService.findOne(id);
   }
 
-  @Mutation(() => User)
-  createUser(
-    @Args('name') name: string,
-    @Args('email') email: string,
-  ): Promise<User> {
-    return this.userService.create({ name, email });
-  }
+@Mutation(() => User)
+createUser(
+  @Args('name') name: string,
+  @Args('email') email: string,
+  @Args('password') password: string,
+): Promise<User> {
+  return this.userService.create({ name, email, password });
+}
 
   @Mutation(() => Boolean)
   deleteUser(@Args('id') id: string): Promise<boolean> {

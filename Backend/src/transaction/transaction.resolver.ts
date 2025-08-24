@@ -1,6 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { TransactionService } from './transaction.service';
-import { Transaction } from './transaction.entity';
+import { Transaction} from './transaction.entity';
+import type { TransactionType } from './transaction.entity';
 import { WalletService } from '../wallet/wallet.service';
 import { Float } from '@nestjs/graphql';
 
@@ -8,47 +9,48 @@ import { Float } from '@nestjs/graphql';
 export class TransactionResolver {
   constructor(
     private readonly transactionService: TransactionService,
-    private readonly walletService: WalletService, // ✅ inject WalletService di constructor
+    private readonly walletService: WalletService,
   ) {}
 
   @Mutation(() => Transaction)
-  async sendTransaction(
+  async createTransaction(
     @Args('userId') userId: string,
-    @Args('from') from: string,
-    @Args('to') to: string,
-    @Args('amount', { type: () => Float }) amount: number,
+    @Args('type') type: TransactionType, // "income" | "expense" | "transfer"
     @Args('note') note: string,
+    @Args('amount', { type: () => Float }) amount: number,
+    @Args('from', { nullable: true }) from?: string,
+    @Args('to', { nullable: true }) to?: string,
     @Args('date', { nullable: true }) date?: Date,
   ): Promise<Transaction> {
-    // cari wallet "from"
-    const fromWallet = await this.walletService.findByUserIdAndName(userId, from);
 
-    // cari wallet "to"
-    const toWallet = await this.walletService.findByUserIdAndName(userId, to);
+    // Validasi type & from/to
+    if (type === 'income' && !to) throw new Error('"to" wallet is required for income');
+    if (type === 'expense' && !from) throw new Error('"from" wallet is required for expense');
+    if (type === 'transfer' && (!from || !to)) throw new Error('"from" and "to" wallets are required for transfer');
 
-    if (!fromWallet && !toWallet) {
-      throw new Error('Either "from" or "to" wallet must exist');
-    }
-
-    // kalau wallet "from" ada → kurangi balance
-    if (fromWallet) {
+    // Update wallet balances
+    if (from) {
+      const fromWallet = await this.walletService.findByUserIdAndName(userId, from);
+      if (!fromWallet) throw new Error(`From wallet "${from}" not found`);
       await this.walletService.decreaseBalance(fromWallet.id, amount);
     }
 
-    // kalau wallet "to" ada → tambah balance
-    if (toWallet) {
+    if (to) {
+      const toWallet = await this.walletService.findByUserIdAndName(userId, to);
+      if (!toWallet) throw new Error(`To wallet "${to}" not found`);
       await this.walletService.increaseBalance(toWallet.id, amount);
     }
 
-    // simpan transaksi
-    return this.transactionService.sendTransaction(
+    // Simpan transaksi
+    return this.transactionService.createTransaction({
       userId,
+      type,
+      note,
+      amount,
       from,
       to,
-      amount,
-      note,
       date,
-    );
+    });
   }
 
   @Query(() => [Transaction])

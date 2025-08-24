@@ -17,9 +17,9 @@ type Transaction {
   id: ID!
   user: User!
   date: DateTime!
-  from: String!
-  to: String!
-  amount: Float!
+  type: String!
+  from: String
+  to: String
   note: String!
 }
 
@@ -28,12 +28,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Category {
+  id: ID!
+  name: String!
+  type: String!
+  user: User!
+}
+
 type User {
   id: ID!
   email: String!
   name: String!
   wallets: [Wallet!]
   transactions: [Transaction!]
+  categories: [Category!]
 }
 
 type Query {
@@ -41,14 +49,17 @@ type Query {
   user(id: String!): User!
   getAllWallets: [Wallet!]!
   getWalletById(id: String!): Wallet
+  categories: [Category!]!
+  categoriesByUser(userId: String!): [Category!]!
   getTransactionsByUserId(userId: String!): [Transaction!]!
 }
 
 type Mutation {
-  createUser(name: String!, email: String!): User!
+  createUser(name: String!, email: String!, password: String!): User!
   deleteUser(id: String!): Boolean!
   createWallet(userId: String!, name: String!, type: String!, currency: String!, description: String): Wallet!
   increaseWalletBalance(id: String!, amount: Float!): Wallet!
   decreaseWalletBalance(id: String!, amount: Float!): Wallet!
-  sendTransaction(userId: String!, from: String!, to: String!, amount: Float!, note: String!, date: DateTime): Transaction!
+  createCategory(name: String!, type: String!, userId: String!): Category!
+  createTransaction(userId: String!, type: String!, note: String!, amount: Float!, from: String, to: String, date: DateTime): Transaction!
 }

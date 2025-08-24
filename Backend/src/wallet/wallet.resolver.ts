@@ -7,13 +7,13 @@ export class WalletResolver {
   constructor(private readonly walletService: WalletService) {}
 
   @Mutation(() => Wallet)
-async createWallet(
-  @Args('userId') userId: string,
-  @Args('name') name: string,
-  @Args('type') type: string,
-  @Args('currency') currency: string,
-  @Args('description', { nullable: true }) description?: string,
-): Promise<Wallet> {
+  async createWallet(
+    @Args('userId') userId: string,
+    @Args('name') name: string,
+    @Args('type') type: string,
+    @Args('currency') currency: string,
+    @Args('description', { nullable: true }) description?: string,
+  ): Promise<Wallet> {
   return this.walletService.createWallet(
     { name, type, currency, description, balance: 0 },
     userId,

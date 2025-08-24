@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
+import { UserService } from 'src/user/user.service';
 import { User } from '../user/user.entity';
 
 @Injectable()
@@ -10,12 +11,12 @@ export class WalletService {
     @InjectRepository(Wallet)
     private readonly walletRepo: Repository<Wallet>,
 
-    @InjectRepository(User)
-    private readonly userRepo: Repository<User>,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
   ) {}
 
   async createWallet(data: Partial<Wallet>, userId: string): Promise<Wallet> {
-    const user = await this.userRepo.findOne({ where: { id: userId } });
+    const user = await this.userService.findOne(userId);
     if (!user) throw new NotFoundException('User not found');
 
     const wallet = this.walletRepo.create({
