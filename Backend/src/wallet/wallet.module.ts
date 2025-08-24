@@ -8,5 +8,6 @@ import { User } from '../user/user.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Wallet, User])],
   providers: [WalletService, WalletResolver],
+  exports:[WalletService],
 })
 export class WalletModule {}

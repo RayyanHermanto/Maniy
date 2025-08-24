@@ -50,4 +50,10 @@ export class WalletService {
     wallet.balance -= amount;
     return this.walletRepo.save(wallet);
   }
+  async findByUserIdAndName(userId: string, name: string): Promise<Wallet | null> {
+  return this.walletRepo.findOne({
+    where: { userId, name },
+  });
+  }
+
 }

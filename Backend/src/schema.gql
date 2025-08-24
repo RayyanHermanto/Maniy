@@ -9,6 +9,7 @@ type Wallet {
   balance: Float!
   description: String
   currency: String!
+  userId: String!
   user: User!
 }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction } from './transaction.entity';
+import { validate as isUuid } from 'uuid';
 
 @Injectable()
 export class TransactionService {
@@ -18,6 +19,12 @@ export class TransactionService {
     note: string,
     date?: Date,
   ): Promise<Transaction> {
+    // Validasi UUID
+    if (!isUuid(userId)) {
+      throw new Error('userId is not a valid UUID');
+    }
+
+    // Buat transaksi baru
     const transaction = this.transactionRepo.create({
       userId,
       from,
@@ -26,7 +33,22 @@ export class TransactionService {
       note,
       date: date ?? new Date(),
     });
-    return this.transactionRepo.save(transaction);
+
+    // Simpan transaksi ke DB
+    const savedTransaction = await this.transactionRepo.save(transaction);
+
+    // Ambil transaksi kembali beserta relasi user
+    const transactionWithUser = await this.transactionRepo.findOne({
+      where: { id: savedTransaction.id },
+      relations: ['user'], // pastikan 'user' adalah nama relasi di Transaction entity
+    });
+
+    // Pastikan tidak null
+    if (!transactionWithUser) {
+      throw new Error('Transaction not found after saving');
+    }
+
+    return transactionWithUser;
   }
 
   async getTransactionsByUserId(userId: string): Promise<Transaction[]> {

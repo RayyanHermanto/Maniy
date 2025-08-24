@@ -3,9 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Transaction } from './transaction.entity';
 import { TransactionService } from './transaction.service';
 import { TransactionResolver } from './transaction.resolver';
+import { WalletModule } from 'src/wallet/wallet.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction])],
+  imports: [
+    TypeOrmModule.forFeature([Transaction]),
+    WalletModule
+  ],
   providers: [TransactionService, TransactionResolver],
 })
 export class TransactionModule {}

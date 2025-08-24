@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { ObjectType, Field, ID, Float } from '@nestjs/graphql';
-import { User } from '../user/user.entity'; // pastikan ada relasi ke user
+import { User } from '../user/user.entity';
 
 @ObjectType()
 @Entity()
@@ -29,7 +29,14 @@ export class Wallet {
   @Column()
   currency: string; // contoh: 'IDR', 'USD'
 
+  // 🔹 Foreign Key eksplisit
+  @Field(() => String)
+  @Column()
+  userId: string;
+
+  // 🔹 Relasi ke User
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.wallets, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' }) // pastikan FK terhubung
   user: User;
 }
